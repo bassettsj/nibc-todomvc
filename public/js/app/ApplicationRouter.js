@@ -86,8 +86,39 @@ define([
 				.withArguments({
 					injector: this.injector
 				});
-			this.stateViewMap.mapState(myAppStates).toView(HeaderView).withArguments({injector:this.injector}).withParent(myAppRecipe).inside('[data-header]');
-			this.stateViewMap.mapState(myAppStates).toView(FooterView).withArguments({injector:this.injector}).withParent(myAppRecipe).inside('[data-footer]');
+			this.stateViewMap
+				.mapState(myAppStates)
+				.toView(HeaderView)
+				.withArguments({injector:this.injector})
+				.withParent(myAppRecipe)
+				.inside('[data-header]');
+			this.stateViewMap
+				.mapState(myAppStates)
+				.toView(FooterView)
+				.withArguments({injector:this.injector})
+				.withParent(myAppRecipe)
+				.inside('[data-footer]');
+
+			this.stateViewMap
+				.mapState('myapp/page1')
+				.toView(Page1View)
+				.withParent(myAppRecipe)
+				.withArguments({injector: this.injector})
+				.inside('[data-tab-container]');
+
+			this.stateViewMap
+				.mapState('myapp/page2')
+				.toView(Page2View)
+				.withParent(myAppRecipe)
+				.withArguments({injector: this.injector})
+				.inside('[data-tab-container]');
+
+			this.stateViewMap
+				.mapState('myapp/page3')
+				.toView(Page3View)
+				.withParent(myAppRecipe)
+				.withArguments({injector: this.injector})
+				.inside('[data-tab-container]');
 		},
 
 		addDebug: function() {

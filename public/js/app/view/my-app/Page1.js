@@ -4,7 +4,6 @@ define([
 function(template) {
 	var Page1View = Backbone.View.extend({
 		template: template,
-		el: 'div',
 		className: 'page1',
 		navigatorBehaviors: ['IHasStateTransition'],
 		initialize: function() {
@@ -13,8 +12,14 @@ function(template) {
 		render: function() {
 			this.$el.html(template());
 		},
-		transitionIn: function (cb){cb()},
-		transitionOut: function(cb){cb()}
+		transitionIn: function(cb) {
+			this.el.style.display = '';
+			cb();
+		},
+		transitionOut: function(cb) {
+			this.el.style.display = 'none';
+			cb();
+		}
 	});
 	return Page1View;
 });

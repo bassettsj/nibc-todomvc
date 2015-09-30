@@ -25,8 +25,8 @@ define([
 			this.$el.find('a[data-tab="page' + 1 + '"]');
 		},
 		render: function() {
-			this.$el.html(template(this.localisationModel.toJSON()));
-
+			this.$el.html(template({pages: this.localisationModel.values()}));
+			return this;
 		},
 		changeTab: function(e) {
 			e.preventDefault();
