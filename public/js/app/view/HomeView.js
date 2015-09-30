@@ -40,7 +40,7 @@ define([
 		},
 
 		onLaunchClick: function(e) {
-			this.njs.request('todo');
+			this.njs.request(e.target.dataset.target || 'todo');
 		}
 	});
 

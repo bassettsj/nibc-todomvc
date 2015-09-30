@@ -1,41 +1,30 @@
 define([
 	//VIEWS
 	'view/HomeView',
-	'view/todo/TodoAppView',
-	'view/todo/HeaderView',
-	'view/todo/FooterView',
-	'view/todo/TodoListView',
-	'view/todo/InfoView',
+	'view/my-app/Tabs',
+	'view/my-app/Header',
+	'view/my-app/Footer',
+	'view/my-app/Page1',
+	'view/my-app/Page2',
+	'view/my-app/Page3',
 
 	//MODELS
-	'model/TodoCollection',
-	'model/TodosModel',
-
-	//COMMANDS
-	'command/OnChangeUpdateFilteredTodosCommand',
-	'command/OnChangeUpdateTodoStatsCommand',
-	'command/OnEditingTodoChangedUpdateActiveTodoCommand',
-	'command/OnChangeActiveTodoUpdateURLCommand',
+	'model/LocalisationModel',
 
 	'util/isDebug'
-], function(
+], function (
 	//VIEWS
 	HomeView,
-	TodoAppView,
+	// My App views
+	TabsView,
 	HeaderView,
 	FooterView,
-	TodoListView,
-	InfoView,
+	Page1View,
+	Page2View,
+	Page3View,
 
 	//MODELS
-	TodoCollection,
-	TodosModel,
-
-	//COMMANDS
-	OnChangeUpdateFilteredTodosCommand,
-	OnChangeUpdateTodoStatsCommand,
-	OnEditingTodoChangedUpdateActiveTodoCommand,
-	OnChangeActiveTodoUpdateURLCommand,
+	LocalisationModel,
 
 	isDebug
 ) {
@@ -58,7 +47,6 @@ define([
 			this.initializeNavigator();
 			this.mapModels();
 			this.mapStates();
-			this.bindCommands();
 
 			if(isDebug) {
 				this.addDebug();
@@ -66,7 +54,7 @@ define([
 
 			var urlState = this.stateUrlSyncer.getUrlState();
 
-			this.njs.start(urlState.equals('') ? 'home' : urlState);
+			this.njs.start(urlState.equals('') ? 'myapp/page1' : urlState);
 		},
 
 		initializeNavigator: function() {
@@ -81,31 +69,25 @@ define([
 		},
 
 		mapModels: function() {
-			this.injector.map('todoCollection').toSingleton(TodoCollection);
-			this.injector.map('todosModel').toSingleton(TodosModel);
+			this.injector.map('localisationModel').toSingleton(LocalisationModel);
 		},
 
 		mapStates: function() {
-			this.stateViewMap.mapState("home").toView(HomeView).withArguments({injector:this.injector});
 
-			//TODO APP
-			var todoStates = ["todo", "todo/active", "todo/completed", "todo/edit/*", "todo/active/edit/*", "todo/completed/edit/*"],
-				todoRecipe = this.stateViewMap.mapState(todoStates).toView(TodoAppView).withArguments({injector:this.injector});
-
-			this.stateViewMap.mapState(todoStates).toView(HeaderView).withArguments({injector:this.injector}).withParent(todoRecipe).inside("#todoapp");
-			this.stateViewMap.mapState(todoStates).toView(TodoListView).withArguments({injector:this.injector}).withParent(todoRecipe).inside("#todoapp");
-			this.stateViewMap.mapState(todoStates).toView(FooterView).withArguments({injector:this.injector}).withParent(todoRecipe).inside("#todoapp");
-			this.stateViewMap.mapState(todoStates).toView(InfoView).withArguments({injector:this.injector}).withParent(todoRecipe);
-		},
-
-		bindCommands: function() {
-			this.bindCommand(this.injector.getInstance('todoCollection'), "change reset add remove", OnChangeUpdateFilteredTodosCommand);
-			this.bindCommand(this.injector.getInstance('todosModel'), "change:filter", OnChangeUpdateFilteredTodosCommand);
-
-			this.bindCommand(this.injector.getInstance('todoCollection'), "change:completed reset add remove", OnChangeUpdateTodoStatsCommand);
-			this.bindCommand(this.injector.getInstance('todoCollection'), "change:editing", OnEditingTodoChangedUpdateActiveTodoCommand);
-
-			this.bindCommand(this.injector.getInstance('todosModel'), "change:activeTodo", OnChangeActiveTodoUpdateURLCommand);
+			var myAppStates = [
+				'myapp',
+				'myapp/page1',
+				'myapp/page2',
+				'myapp/page3'
+			];
+			var myAppRecipe = this.stateViewMap
+				.mapState(myAppStates)
+				.toView(TabsView)
+				.withArguments({
+					injector: this.injector
+				});
+			this.stateViewMap.mapState(myAppStates).toView(HeaderView).withArguments({injector:this.injector}).withParent(myAppRecipe).inside('[data-header]');
+			this.stateViewMap.mapState(myAppStates).toView(FooterView).withArguments({injector:this.injector}).withParent(myAppRecipe).inside('[data-footer]');
 		},
 
 		addDebug: function() {
